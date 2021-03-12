@@ -26,8 +26,16 @@ myApp.services = {
         '</ons-list-item>'
       );
 
+
+
       // Store data within the element.
       taskItem.data = data;
+
+        // ------------------ a revoir
+        /*
+        var listId = (data.completed) ? '#completed-list' : '#pending-list';
+        document.querySelector(listId).appendChild(taskItem);
+        */
 
       // Add 'completion' functionality when the checkbox changes.
       taskItem.data.onCheckboxChange = function(event) {
@@ -35,6 +43,10 @@ myApp.services = {
           var listId = (taskItem.parentElement.id === 'pending-list' && event.target.checked) ? '#completed-list' : '#pending-list';
           document.querySelector(listId).appendChild(taskItem);
         });
+
+        taskItem.data.completed = !taskItem.data.completed;
+        window.localStorage.setItem("item:" + taskItem.data.title, JSON.stringify(taskItem.data));
+        console.log(taskItem.data.completed);
       };
 
       taskItem.addEventListener('change', taskItem.data.onCheckboxChange);
@@ -70,6 +82,11 @@ myApp.services = {
       pendingList.insertBefore(taskItem, taskItem.data.urgent ? pendingList.firstChild : null);
     },
 
+    // Store a task
+    store: function(task){
+      window.localStorage.setItem("item:" + task.title, JSON.stringify(task));
+    },
+
     // Modifies the inner data and current view of an existing task.
     update: function(taskItem, data) {
       if (data.title !== taskItem.data.title) {
@@ -90,8 +107,11 @@ myApp.services = {
       // Add or remove the highlight.
       taskItem.classList[data.highlight ? 'add' : 'remove']('highlight');
 
+      window.localStorage.removeItem("item:" + taskItem.data.title);
+
       // Store the new data within the element.
       taskItem.data = data;
+      this.store(data);
     },
 
     // Deletes a task item and its listeners.
@@ -104,6 +124,8 @@ myApp.services = {
         // Check if the category has no items and remove it in that case.
         myApp.services.categories.updateRemove(taskItem.data.category);
       });
+      console.log("suppr : " + taskItem.data.title)
+      window.localStorage.removeItem("item:" + taskItem.data.title);
     }
   },
 

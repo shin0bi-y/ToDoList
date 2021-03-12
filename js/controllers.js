@@ -43,21 +43,26 @@ myApp.controllers = {
   ////////////////////////////
   newTaskPage: function(page) {
     // Set button functionality to save a new task.
+
     Array.prototype.forEach.call(page.querySelectorAll('[component="button/save-task"]'), function(element) {
       element.onclick = function() {
         var newTitle = page.querySelector('#title-input').value;
 
         if (newTitle) {
           // If input title is not empty, create a new task.
-          myApp.services.tasks.create(
-            {
-              title: newTitle,
-              category: page.querySelector('#category-input').value,
-              description: page.querySelector('#description-input').value,
-              highlight: page.querySelector('#highlight-input').checked,
-              urgent: page.querySelector('#urgent-input').checked
-            }
-          );
+
+          var task = {
+            title: newTitle,
+            category: page.querySelector('#category-input').value,
+            description: page.querySelector('#description-input').value,
+            highlight: page.querySelector('#highlight-input').checked,
+            urgent: page.querySelector('#urgent-input').checked,
+            completed:false
+          }
+
+          myApp.services.tasks.store(task);
+
+          myApp.services.tasks.create(task);
 
           // Set selected category to 'All', refresh and pop page.
           document.querySelector('#default-category-list ons-list-item ons-radio').checked = true;
