@@ -45,7 +45,7 @@ myApp.services = {
         });
 
         taskItem.data.completed = !taskItem.data.completed;
-        window.localStorage.setItem("item:" + taskItem.data.title, JSON.stringify(taskItem.data));
+        window.localStorage.setItem("item:" + taskItem.data.title + "-" + taskItem.data.category, JSON.stringify(taskItem.data));
         console.log(taskItem.data.completed);
       };
 
@@ -83,8 +83,12 @@ myApp.services = {
     },
 
     // Store a task
-    store: function(task){
-      window.localStorage.setItem("item:" + task.title, JSON.stringify(task));
+    store: function(task) {
+      if (window.localStorage.getItem("item:" + task.title + "-" + task.category) === null) {
+        window.localStorage.setItem("item:" + task.title + "-" + task.category, JSON.stringify(task));
+        return true;
+      }
+      return false;
     },
 
     // Modifies the inner data and current view of an existing task.
@@ -107,7 +111,7 @@ myApp.services = {
       // Add or remove the highlight.
       taskItem.classList[data.highlight ? 'add' : 'remove']('highlight');
 
-      window.localStorage.removeItem("item:" + taskItem.data.title);
+      window.localStorage.removeItem("item:" + taskItem.data.title + "-" + taskItem.data.category);
 
       // Store the new data within the element.
       taskItem.data = data;
@@ -125,7 +129,7 @@ myApp.services = {
         myApp.services.categories.updateRemove(taskItem.data.category);
       });
       console.log("suppr : " + taskItem.data.title)
-      window.localStorage.removeItem("item:" + taskItem.data.title);
+      window.localStorage.removeItem("item:" + taskItem.data.title + "-" + taskItem.data.category);
     }
   },
 

@@ -60,14 +60,18 @@ myApp.controllers = {
             completed:false
           }
 
-          myApp.services.tasks.store(task);
+          if (myApp.services.tasks.store(task)) {
+            myApp.services.tasks.create(task);
+            // Set selected category to 'All', refresh and pop page.
+            document.querySelector('#default-category-list ons-list-item ons-radio').checked = true;
+            document.querySelector('#default-category-list ons-list-item').updateCategoryView();
+            document.querySelector('#myNavigator').popPage();
+          } else {
+            //Show alert if title is already used
+            ons.notification.alert('You must provide another title.');
+          }
 
-          myApp.services.tasks.create(task);
 
-          // Set selected category to 'All', refresh and pop page.
-          document.querySelector('#default-category-list ons-list-item ons-radio').checked = true;
-          document.querySelector('#default-category-list ons-list-item').updateCategoryView();
-          document.querySelector('#myNavigator').popPage();
 
         } else {
           // Show alert if the input title is empty.
