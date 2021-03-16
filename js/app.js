@@ -15,12 +15,6 @@ document.addEventListener('init', function(event) {
 
     if (document.querySelector('#menuPage') && document.querySelector('#pendingTasksPage') && !document.querySelector('#pendingTasksPage ons-list-item'))
     {
-      /*
-      myApp.services.fixtures.forEach(function(data) {
-        myApp.services.tasks.create(data);
-      });*/
-
-      
       for(let key in window.localStorage){
         if(!key.startsWith('item:')) continue;
 
@@ -28,11 +22,6 @@ document.addEventListener('init', function(event) {
         console.log(key + " " + task)
         myApp.services.tasks.create(task);
       }
-      /*
-      window.localStorage.forEach(key => {
-        let task = JSON.parse(window.localStorage.getItem(key));
-        myApp.services.tasks.create(task);
-      });*/
 
     }
   }

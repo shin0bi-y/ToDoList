@@ -26,16 +26,8 @@ myApp.services = {
         '</ons-list-item>'
       );
 
-
-
       // Store data within the element.
       taskItem.data = data;
-
-        // ------------------ a revoir
-        /*
-        var listId = (data.completed) ? '#completed-list' : '#pending-list';
-        document.querySelector(listId).appendChild(taskItem);
-        */
 
       // Add 'completion' functionality when the checkbox changes.
       taskItem.data.onCheckboxChange = function(event) {
@@ -46,7 +38,6 @@ myApp.services = {
 
         taskItem.data.completed = !taskItem.data.completed;
         window.localStorage.setItem("item:" + taskItem.data.title + "-" + taskItem.data.category, JSON.stringify(taskItem.data));
-        console.log(taskItem.data.completed);
       };
 
       taskItem.addEventListener('change', taskItem.data.onCheckboxChange);
@@ -78,8 +69,9 @@ myApp.services = {
       }
 
       // Insert urgent tasks at the top and non urgent tasks at the bottom.
-      var pendingList = document.querySelector('#pending-list');
-      pendingList.insertBefore(taskItem, taskItem.data.urgent ? pendingList.firstChild : null);
+      var list = document.querySelector((data.completed) ? '#completed-list' : '#pending-list');
+
+      (taskItem.data.urgent && list.firstChild !== null) ? list.insertBefore(taskItem, list.firstChild) : list.appendChild(taskItem);
     },
 
     // Store a task
