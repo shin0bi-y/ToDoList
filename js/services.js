@@ -47,8 +47,18 @@ myApp.services = {
        */
 
       taskItem.addEventListener("swipeleft", evt => {
-            console.log("swipeleft");
-          });
+        if (taskItem.data.state !== 1) {
+          taskItem.data.state --;
+          this.update(taskItem, taskItem.data);
+        }
+      });
+
+      taskItem.addEventListener("swiperight", evt => {
+        if (taskItem.data.state !== 3) {
+          taskItem.data.state++;
+          this.update(taskItem, taskItem.data);
+        }
+      });
 
       // Add button functionality to remove a task.
       taskItem.querySelector('.right').onclick = function() {
@@ -77,10 +87,23 @@ myApp.services = {
       }
 
       let list = null;
-      list = document.querySelector((data.completed) ? '#completed-list' : '#pending-list');
+      //list = document.querySelector((data.completed) ? '#completed-list' : '#pending-list');
 
       // Change the checkbox state
       //taskItem.querySelector("ons-checkbox").checked = data.completed;
+
+      // Set the task's state basing on data.state
+      switch (taskItem.data.state) {
+        case 1:
+          list = document.querySelector("#pending-list");
+          break;
+        case 2:
+          list = document.querySelector("#in-progress-list");
+          break;
+        case 3:
+          list = document.querySelector("#completed-list");
+          break;
+      }
 
       // Insert urgent tasks at the top and non urgent tasks at the bottom.
       (taskItem.data.urgent && list.firstChild !== null) ? list.insertBefore(taskItem, list.firstChild) : list.appendChild(taskItem);

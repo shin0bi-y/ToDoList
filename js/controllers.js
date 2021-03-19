@@ -57,7 +57,7 @@ myApp.controllers = {
             description: page.querySelector('#description-input').value,
             highlight: page.querySelector('#highlight-input').checked,
             urgent: page.querySelector('#urgent-input').checked,
-            completed:false
+            state: 1
           }
 
           if (myApp.services.tasks.store(task)) {

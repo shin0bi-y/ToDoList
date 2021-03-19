@@ -17,7 +17,7 @@ document.addEventListener('init', function(event) {
   // Fill the lists with initial data when the pages we need are ready.
   // This only happens once at the beginning of the app.
   // page.id === 'menuPage' || page.id === 'pendingTasksPage'
-  if (inc === 5) {
+  if (inc === 6) {
     for(let key in window.localStorage){
       if(!key.startsWith('item:')) continue;
 
