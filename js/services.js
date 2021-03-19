@@ -68,10 +68,13 @@ myApp.services = {
         taskItem.classList.add('highlight');
       }
 
-      // Insert urgent tasks at the top and non urgent tasks at the bottom.
       let list = null;
       list = document.querySelector((data.completed) ? '#completed-list' : '#pending-list');
 
+      // Change the checkbox state
+      taskItem.querySelector("ons-checkbox").checked = data.completed;
+
+      // Insert urgent tasks at the top and non urgent tasks at the bottom.
       (taskItem.data.urgent && list.firstChild !== null) ? list.insertBefore(taskItem, list.firstChild) : list.appendChild(taskItem);
     },
 
