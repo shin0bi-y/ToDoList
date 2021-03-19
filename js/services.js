@@ -69,7 +69,8 @@ myApp.services = {
       }
 
       // Insert urgent tasks at the top and non urgent tasks at the bottom.
-      var list = document.querySelector((data.completed) ? '#completed-list' : '#pending-list');
+      let list = null;
+      list = document.querySelector((data.completed) ? '#completed-list' : '#pending-list');
 
       (taskItem.data.urgent && list.firstChild !== null) ? list.insertBefore(taskItem, list.firstChild) : list.appendChild(taskItem);
     },

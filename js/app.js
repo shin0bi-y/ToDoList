@@ -1,8 +1,13 @@
 // App logic.
 window.myApp = {};
 
+
+let inc = 0;
+
 document.addEventListener('init', function(event) {
-  var page = event.target;
+  let page = event.target;
+
+  inc++;
 
   // Each page calls its own initialization controller.
   if (myApp.controllers.hasOwnProperty(page.id)) {
@@ -11,18 +16,14 @@ document.addEventListener('init', function(event) {
 
   // Fill the lists with initial data when the pages we need are ready.
   // This only happens once at the beginning of the app.
-  if (page.id === 'menuPage' || page.id === 'pendingTasksPage') {
+  // page.id === 'menuPage' || page.id === 'pendingTasksPage'
+  if (inc === 5) {
+    for(let key in window.localStorage){
+      if(!key.startsWith('item:')) continue;
 
-    if (document.querySelector('#menuPage') && document.querySelector('#pendingTasksPage') && !document.querySelector('#pendingTasksPage ons-list-item'))
-    {
-      for(let key in window.localStorage){
-        if(!key.startsWith('item:')) continue;
-
-        let task = JSON.parse(window.localStorage.getItem(key));
-        console.log(key + " " + task)
-        myApp.services.tasks.create(task);
-      }
-
+      let task = JSON.parse(window.localStorage.getItem(key));
+      console.log(key + " " + task)
+      myApp.services.tasks.create(task);
     }
   }
 });
