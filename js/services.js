@@ -49,14 +49,15 @@ myApp.services = {
       taskItem.addEventListener("swipeleft", evt => {
         if (taskItem.data.state !== 1) {
           taskItem.data.state --;
-          this.update(taskItem, taskItem.data);
+          window.localStorage.setItem("item:" + taskItem.data.title + "-" + taskItem.data.category, JSON.stringify(taskItem.data));
+
         }
       });
 
       taskItem.addEventListener("swiperight", evt => {
         if (taskItem.data.state !== 3) {
           taskItem.data.state++;
-          this.update(taskItem, taskItem.data);
+          window.localStorage.setItem("item:" + taskItem.data.title + "-" + taskItem.data.category, JSON.stringify(taskItem.data));
         }
       });
 
@@ -243,13 +244,18 @@ myApp.services = {
   },
 
   //////////////////////
-  // Animation Service //
+  // Animation Service//
   /////////////////////
   animators: {
 
     // Swipe animation for task completion.
     swipe: function(listItem, callback) {
       var animation = (listItem.parentElement.id === 'pending-list') ? 'animation-swipe-right' : 'animation-swipe-left';
+      switch (listItem.parentElement.id) {
+        case 'pending-list':
+
+
+      }
       listItem.classList.add('hide-children');
       listItem.classList.add(animation);
 
