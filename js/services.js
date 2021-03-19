@@ -272,20 +272,20 @@ myApp.services = {
     swipe: function(listItem, callback, right) {
       let animation = right ? "animation-swipe-right" : "animation-swipe-left";
 
-      listItem.classList.add('hide-children');
-      listItem.classList.add(animation);
+      listItem.querySelector("ons-list-item").classList.add('hide-children');
+      listItem.querySelector("ons-list-item").classList.add(animation);
 
       setTimeout(function() {
-        listItem.classList.remove(animation);
-        listItem.classList.remove('hide-children');
+        listItem.querySelector("ons-list-item").classList.remove(animation);
+        listItem.querySelector("ons-list-item").classList.remove('hide-children');
         callback();
       }, 950);
     },
 
     // Remove animation for task deletion.
     remove: function(listItem, callback) {
-      listItem.classList.add('animation-remove');
-      listItem.classList.add('hide-children');
+      listItem.querySelector("ons-list-item").classList.add('animation-remove');
+      listItem.querySelector("ons-list-item").classList.add('hide-children');
 
       setTimeout(function() {
         callback();
