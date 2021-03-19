@@ -14,17 +14,17 @@ myApp.services = {
       // Task item template.
       var taskItem = ons.createElement(
           '<ons-gesture-detector id="detect-area">' +
-        '<ons-list-item tappable category="' + myApp.services.categories.parseId(data.category)+ '">' +
+          '<ons-list-item tappable category="' + myApp.services.categories.parseId(data.category)+ '">' +
           '<label class="left">' +
           '</label>' +
           '<div class="center">' +
-            data.title +
+          data.title +
           '</div>' +
           '<div class="right">' +
-            '<ons-icon style="color: grey; padding-left: 4px" icon="ion-ios-trash-outline, material:md-delete"></ons-icon>' +
+          '<ons-icon style="color: grey; padding-left: 4px" icon="ion-ios-trash-outline, material:md-delete"></ons-icon>' +
           '</div>' +
-        '</ons-list-item>' +
-      '</ons-gesture-detector>'
+          '</ons-list-item>' +
+          '</ons-gesture-detector>'
       );
 
       // Store data within the element.
@@ -49,14 +49,27 @@ myApp.services = {
       taskItem.addEventListener("swipeleft", evt => {
         if (taskItem.data.state !== 1) {
           taskItem.data.state --;
-          window.localStorage.setItem("item:" + taskItem.data.title + "-" + taskItem.data.category, JSON.stringify(taskItem.data));
 
+          //animation
+          myApp.services.animators.swipe(taskItem, function() {
+            document.querySelector(myApp.services.tasks.getState(taskItem.data)).appendChild(taskItem);
+          }, false);
+
+          //saving
+          window.localStorage.setItem("item:" + taskItem.data.title + "-" + taskItem.data.category, JSON.stringify(taskItem.data));
         }
       });
 
       taskItem.addEventListener("swiperight", evt => {
         if (taskItem.data.state !== 3) {
           taskItem.data.state++;
+
+          //animation
+          myApp.services.animators.swipe(taskItem, function() {
+            document.querySelector(myApp.services.tasks.getState(taskItem.data)).appendChild(taskItem);
+          }, true);
+
+          //saving
           window.localStorage.setItem("item:" + taskItem.data.title + "-" + taskItem.data.category, JSON.stringify(taskItem.data));
         }
       });
@@ -87,24 +100,13 @@ myApp.services = {
         taskItem.classList.add('highlight');
       }
 
-      let list = null;
       //list = document.querySelector((data.completed) ? '#completed-list' : '#pending-list');
 
       // Change the checkbox state
       //taskItem.querySelector("ons-checkbox").checked = data.completed;
 
       // Set the task's state basing on data.state
-      switch (taskItem.data.state) {
-        case 1:
-          list = document.querySelector("#pending-list");
-          break;
-        case 2:
-          list = document.querySelector("#in-progress-list");
-          break;
-        case 3:
-          list = document.querySelector("#completed-list");
-          break;
-      }
+      let list = document.querySelector(this.getState(taskItem.data));
 
       // Insert urgent tasks at the top and non urgent tasks at the bottom.
       (taskItem.data.urgent && list.firstChild !== null) ? list.insertBefore(taskItem, list.firstChild) : list.appendChild(taskItem);
@@ -117,6 +119,24 @@ myApp.services = {
         return true;
       }
       return false;
+    },
+
+    getState: function(taskItem) {
+      let list;
+      switch (taskItem.state) {
+        case 1:
+          list = "#pending-list"
+          break;
+        case 2:
+          list = "#in-progress-list"
+          break;
+        case 3:
+          list = "#completed-list"
+          break;
+        default:
+          console.log(taskItem.state);
+      }
+      return list;
     },
 
     // Modifies the inner data and current view of an existing task.
@@ -172,14 +192,14 @@ myApp.services = {
 
       // Category item template.
       var categoryItem = ons.createElement(
-        '<ons-list-item tappable category-id="' + categoryId + '">' +
+          '<ons-list-item tappable category-id="' + categoryId + '">' +
           '<div class="left">' +
-            '<ons-radio name="categoryGroup" input-id="radio-'  + categoryId + '"></ons-radio>' +
+          '<ons-radio name="categoryGroup" input-id="radio-'  + categoryId + '"></ons-radio>' +
           '</div>' +
           '<label class="center" for="radio-' + categoryId + '">' +
-            (categoryLabel || 'No category') +
+          (categoryLabel || 'No category') +
           '</label>' +
-        '</ons-list-item>'
+          '</ons-list-item>'
       );
 
       // Adds filtering functionality to this category item.
@@ -249,13 +269,9 @@ myApp.services = {
   animators: {
 
     // Swipe animation for task completion.
-    swipe: function(listItem, callback) {
-      var animation = (listItem.parentElement.id === 'pending-list') ? 'animation-swipe-right' : 'animation-swipe-left';
-      switch (listItem.parentElement.id) {
-        case 'pending-list':
+    swipe: function(listItem, callback, right) {
+      let animation = right ? "animation-swipe-right" : "animation-swipe-left";
 
-
-      }
       listItem.classList.add('hide-children');
       listItem.classList.add(animation);
 
