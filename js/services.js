@@ -13,9 +13,9 @@ myApp.services = {
     create: function(data) {
       // Task item template.
       var taskItem = ons.createElement(
+          '<ons-gesture-detector id="detect-area">' +
         '<ons-list-item tappable category="' + myApp.services.categories.parseId(data.category)+ '">' +
           '<label class="left">' +
-           '<ons-checkbox></ons-checkbox>' +
           '</label>' +
           '<div class="center">' +
             data.title +
@@ -23,13 +23,15 @@ myApp.services = {
           '<div class="right">' +
             '<ons-icon style="color: grey; padding-left: 4px" icon="ion-ios-trash-outline, material:md-delete"></ons-icon>' +
           '</div>' +
-        '</ons-list-item>'
+        '</ons-list-item>' +
+      '</ons-gesture-detector>'
       );
 
       // Store data within the element.
       taskItem.data = data;
 
       // Add 'completion' functionality when the checkbox changes.
+      /*
       taskItem.data.onCheckboxChange = function(event) {
         myApp.services.animators.swipe(taskItem, function() {
           var listId = (taskItem.parentElement.id === 'pending-list' && event.target.checked) ? '#completed-list' : '#pending-list';
@@ -40,7 +42,13 @@ myApp.services = {
         window.localStorage.setItem("item:" + taskItem.data.title + "-" + taskItem.data.category, JSON.stringify(taskItem.data));
       };
 
+
       taskItem.addEventListener('change', taskItem.data.onCheckboxChange);
+       */
+
+      taskItem.addEventListener("swipeleft", evt => {
+            console.log("swipeleft");
+          });
 
       // Add button functionality to remove a task.
       taskItem.querySelector('.right').onclick = function() {
@@ -48,17 +56,17 @@ myApp.services = {
       };
 
       // Add functionality to push 'details_task.html' page with the current element as a parameter.
-      taskItem.querySelector('.center').onclick = function() {
+      taskItem.addEventListener("hold", function() {
         document.querySelector('#myNavigator')
-          .pushPage('html/details_task.html',
-            {
-              animation: 'lift',
-              data: {
-                element: taskItem
-              }
-            }
-          );
-      };
+            .pushPage('html/details_task.html',
+                {
+                  animation: 'lift',
+                  data: {
+                    element: taskItem
+                  }
+                }
+            );
+      });
 
       // Check if it's necessary to create new categories for this item.
       myApp.services.categories.updateAdd(taskItem.data.category);
@@ -72,7 +80,7 @@ myApp.services = {
       list = document.querySelector((data.completed) ? '#completed-list' : '#pending-list');
 
       // Change the checkbox state
-      taskItem.querySelector("ons-checkbox").checked = data.completed;
+      //taskItem.querySelector("ons-checkbox").checked = data.completed;
 
       // Insert urgent tasks at the top and non urgent tasks at the bottom.
       (taskItem.data.urgent && list.firstChild !== null) ? list.insertBefore(taskItem, list.firstChild) : list.appendChild(taskItem);
