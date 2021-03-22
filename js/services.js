@@ -30,22 +30,6 @@ myApp.services = {
       // Store data within the element.
       taskItem.data = data;
 
-      // Add 'completion' functionality when the checkbox changes.
-      /*
-      taskItem.data.onCheckboxChange = function(event) {
-        myApp.services.animators.swipe(taskItem, function() {
-          var listId = (taskItem.parentElement.id === 'pending-list' && event.target.checked) ? '#completed-list' : '#pending-list';
-          document.querySelector(listId).appendChild(taskItem);
-        });
-
-        taskItem.data.completed = !taskItem.data.completed;
-        window.localStorage.setItem("item:" + taskItem.data.title + "-" + taskItem.data.category, JSON.stringify(taskItem.data));
-      };
-
-
-      taskItem.addEventListener('change', taskItem.data.onCheckboxChange);
-       */
-
       taskItem.addEventListener("swipeleft", evt => {
         if (taskItem.data.state !== 1) {
           taskItem.data.state --;
@@ -134,9 +118,22 @@ myApp.services = {
           list = "#completed-list"
           break;
         default:
-          console.log(taskItem.state);
+          console.log("nan ? : "+taskItem.state);
       }
       return list;
+    },
+
+    purge: function () {
+      ons.notification.confirm({message: "Are you sure about that ?", callback: function (answer) {
+        if (answer)  {
+          for (let localStorageKey in window.localStorage) {
+            if (localStorageKey.startsWith("item:")) {
+              window.localStorage.removeItem(localStorageKey);
+            }
+          }
+          location.reload();
+        }
+      }});
     },
 
     // Modifies the inner data and current view of an existing task.
@@ -291,67 +288,5 @@ myApp.services = {
         callback();
       }, 750);
     }
-  },
-
-  ////////////////////////
-  // Initial Data Service //
-  ////////////////////////
-  fixtures: [
-    {
-      title: 'Download OnsenUI',
-      category: 'Programming',
-      description: 'Some description.',
-      highlight: false,
-      urgent: false
-    },
-    {
-      title: 'Install Monaca CLI',
-      category: 'Programming',
-      description: 'Some description.',
-      highlight: false,
-      urgent: false
-    },
-    {
-      title: 'Star Onsen UI repo on Github',
-      category: 'Super important',
-      description: 'Some description.',
-      highlight: false,
-      urgent: false
-    },
-    {
-      title: 'Register in the community forum',
-      category: 'Super important',
-      description: 'Some description.',
-      highlight: false,
-      urgent: false
-    },
-    {
-      title: 'Send donations to Fran and Andreas',
-      category: 'Super important',
-      description: 'Some description.',
-      highlight: false,
-      urgent: false
-    },
-    {
-      title: 'Profit',
-      category: '',
-      description: 'Some description.',
-      highlight: false,
-      urgent: false
-    },
-    {
-      title: 'Visit Japan',
-      category: 'Travels',
-      description: 'Some description.',
-      highlight: false,
-      urgent: false
-    },
-    {
-      title: 'Enjoy an Onsen with Onsen UI team',
-      category: 'Personal',
-      description: 'Some description.',
-      highlight: false,
-      urgent: false
-    }
-  ]
+  }
 };

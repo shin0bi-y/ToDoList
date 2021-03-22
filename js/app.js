@@ -25,5 +25,8 @@ document.addEventListener('init', function(event) {
       console.log(key + " " + task)
       myApp.services.tasks.create(task);
     }
+
+    myApp.controllers.listenersAdd();
+
   }
 });

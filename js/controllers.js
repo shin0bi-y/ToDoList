@@ -115,7 +115,8 @@ myApp.controllers = {
                 title: newTitle,
                 category: page.querySelector('#category-input').value,
                 description: page.querySelector('#description-input').value,
-                ugent: element.data.urgent,
+                urgent: element.data.urgent,
+                state: element.data.state,
                 highlight: page.querySelector('#highlight-input').checked
               }
             );
@@ -132,5 +133,10 @@ myApp.controllers = {
         ons.notification.alert('You must provide a task title.');
       }
     };
+  },
+
+  listenersAdd: function () {
+    document.querySelector("#purgeTasks")
+        .addEventListener("click", myApp.services.tasks.purge);
   }
 };

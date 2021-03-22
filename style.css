@@ -162,4 +162,9 @@ ons-splitter-side[side="left"][animation="overlay"] {
     opacity: 0.1;
     height: 0;
   }
+
+}
+
+#purgeTasks {
+  background: red;
 }
