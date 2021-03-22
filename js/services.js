@@ -257,6 +257,16 @@ myApp.services = {
     // Transforms a category name into a valid id.
     parseId: function(categoryLabel) {
       return categoryLabel ? categoryLabel.replace(/\s\s+/g, ' ').toLowerCase() : '';
+    },
+
+    returnAllCategories: function () {
+      let categories = [];
+      for (let localStorageKey in window.localStorage) {
+        if (localStorageKey.startsWith("item:") && !categories.includes(window.localStorage.getItem(localStorageKey))) {
+          categories.push(window.localStorage.getItem(window.localStorage.getItem(localStorageKey)));
+        }
+      }
+      return categories;
     }
   },
 

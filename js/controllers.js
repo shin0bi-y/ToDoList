@@ -17,6 +17,10 @@ myApp.controllers = {
     Array.prototype.forEach.call(page.querySelectorAll('[component="button/new-task"]'), function(element) {
       element.onclick = function() {
         document.querySelector('#myNavigator').pushPage('html/new_task.html');
+        let select = 'html/new_task.html'.querySelector("ons-select");
+        myApp.services.categories.returnAllCategories().forEach(category => {
+          select.innerHTML += "<option value=\"material\">${category}</option>";
+        });
       };
 
       element.show && element.show(); // Fix ons-fab in Safari.
@@ -53,11 +57,20 @@ myApp.controllers = {
 
           var task = {
             title: newTitle,
-            category: page.querySelector('#category-input').value,
             description: page.querySelector('#description-input').value,
             highlight: page.querySelector('#highlight-input').checked,
             urgent: page.querySelector('#urgent-input').checked,
             state: 1
+          }
+
+          let select = page.querySelector("#choose-sel");
+
+          // Aller chercher le select dans la page et faire la verif dessus : P4
+
+          if (select.contains()) {
+
+          } else {
+            task.category = page.querySelector('#category-input').value
           }
 
           if (myApp.services.tasks.store(task)) {
