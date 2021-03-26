@@ -104,6 +104,11 @@ myApp.controllers = {
     // Get the element passed as argument to pushPage.
     var element = page.data.element;
 
+    let select = page.querySelector("ons-select").querySelector("select");
+    myApp.services.categories.returnAllCategories().forEach(category => {
+      select.innerHTML += "<option value='" + category + "'>" + category + "</option>";
+    });
+
     // Fill the view with the stored data.
     page.querySelector('#title-input').value = element.data.title;
     page.querySelector('#category-input').value = element.data.category;
@@ -113,10 +118,6 @@ myApp.controllers = {
 
     // Set button functionality to save an existing task.
     page.querySelector('[component="button/save-task"]').onclick = function() {
-
-      
-
-
 
       var newTitle = page.querySelector('#title-input').value;
 
@@ -130,22 +131,37 @@ myApp.controllers = {
           }
         ).then(function(buttonIndex) {
           if (buttonIndex === 1) {
-            // If 'Save' button was pressed, overwrite the task.
-            myApp.services.tasks.update(element,
-              {
-                title: newTitle,
-                category: page.querySelector('#category-input').value,
-                description: page.querySelector('#description-input').value,
-                urgent: element.data.urgent,
-                state: element.data.state,
-                highlight: page.querySelector('#highlight-input').checked
-              }
-            );
 
-            // Set selected category to 'All', refresh and pop page.
-            document.querySelector('#default-category-list ons-list-item ons-radio').checked = true;
-            document.querySelector('#default-category-list ons-list-item').updateCategoryView();
-            document.querySelector('#myNavigator').popPage();
+            let task = {
+              title: newTitle,
+              //category: page.querySelector('#category-input').value,
+              description: page.querySelector('#description-input').value,
+              urgent: element.data.urgent,
+              state: element.data.state,
+              highlight: page.querySelector('#highlight-input').checked
+            }
+
+            let selector = page.querySelector("#choose-sel");
+
+            // Aller chercher le select dans la page et faire la verif dessus : P4
+            if (selector.value !== "-") {
+              task.category = selector.value;
+            } else if(page.querySelector('#category-input').value !== undefined){
+              task.category = page.querySelector('#category-input').value;
+            } else{
+              task.category = "";
+            }
+
+            if(myApp.services.tasks.exists(task)) ons.notification.alert('You must provide another title.');
+            else{
+              // If 'Save' button was pressed, overwrite the task.
+              myApp.services.tasks.update(element, task);
+
+              // Set selected category to 'All', refresh and pop page.
+              document.querySelector('#default-category-list ons-list-item ons-radio').checked = true;
+              document.querySelector('#default-category-list ons-list-item').updateCategoryView();
+              document.querySelector('#myNavigator').popPage();
+            }
           }
         });
 
@@ -159,5 +175,10 @@ myApp.controllers = {
   listenersAdd: function () {
     document.querySelector("#purgeTasks")
         .addEventListener("click", myApp.services.tasks.purge);
+  },
+
+  onSelectChange: function(event) {
+    event.target.parentNode.parentNode.querySelector("ons-input").disabled = event.target.value !== "-"
+    //console.log()
   }
 };

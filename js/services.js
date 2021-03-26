@@ -95,6 +95,9 @@ myApp.services = {
       // Insert urgent tasks at the top and non urgent tasks at the bottom.
       (taskItem.data.urgent && list.firstChild !== null) ? list.insertBefore(taskItem, list.firstChild) : list.appendChild(taskItem);
     },
+    exists: function(task){
+      return window.localStorage.getItem("item:" + task.title + "-" + task.category) !== null;
+    },
 
     // Store a task
     store: function(task) {
