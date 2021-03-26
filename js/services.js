@@ -262,8 +262,10 @@ myApp.services = {
     returnAllCategories: function () {
       let categories = [];
       for (let localStorageKey in window.localStorage) {
-        if (localStorageKey.startsWith("item:") && !categories.includes(window.localStorage.getItem(localStorageKey))) {
-          categories.push(window.localStorage.getItem(window.localStorage.getItem(localStorageKey)));
+        if (localStorageKey.startsWith("item:")) {
+          let item = JSON.parse(window.localStorage.getItem(localStorageKey));
+
+          if(!categories.includes(item.category)) categories.push(item.category);
         }
       }
       return categories;

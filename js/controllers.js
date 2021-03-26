@@ -16,12 +16,14 @@ myApp.controllers = {
     // Set button functionality to push 'new_task.html' page.
     Array.prototype.forEach.call(page.querySelectorAll('[component="button/new-task"]'), function(element) {
       element.onclick = function() {
-        document.querySelector('#myNavigator').pushPage('html/new_task.html');
-        let select = 'html/new_task.html'.querySelector("ons-select");
-        myApp.services.categories.returnAllCategories().forEach(category => {
-          select.innerHTML += "<option value=\"material\">${category}</option>";
+        document.querySelector('#myNavigator').pushPage('html/new_task.html').then(function(){
+          let select = document.querySelector("#newTaskPage").querySelector("ons-select").querySelector("select");
+          console.log(myApp.services.categories.returnAllCategories());
+          myApp.services.categories.returnAllCategories().forEach(category => {
+            select.innerHTML += "<option value='" + category + "'>" + category + "</option>";
+          });
         });
-      };
+      }
 
       element.show && element.show(); // Fix ons-fab in Safari.
     });
@@ -66,11 +68,12 @@ myApp.controllers = {
           let select = page.querySelector("#choose-sel");
 
           // Aller chercher le select dans la page et faire la verif dessus : P4
-
-          if (select.contains()) {
-
-          } else {
-            task.category = page.querySelector('#category-input').value
+          if (select.value !== "-") {
+            task.category = select.value;
+          } else if(page.querySelector('#category-input').value !== undefined){
+            task.category = page.querySelector('#category-input').value;
+          } else{
+            task.category = "";
           }
 
           if (myApp.services.tasks.store(task)) {
@@ -110,6 +113,11 @@ myApp.controllers = {
 
     // Set button functionality to save an existing task.
     page.querySelector('[component="button/save-task"]').onclick = function() {
+
+      
+
+
+
       var newTitle = page.querySelector('#title-input').value;
 
       if (newTitle) {
