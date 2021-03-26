@@ -180,5 +180,44 @@ myApp.controllers = {
   onSelectChange: function(event) {
     event.target.parentNode.parentNode.querySelector("ons-input").disabled = event.target.value !== "-"
     //console.log()
+  },
+
+  changeSorting: function(event) {
+    myApp.services.ascendingSort = !myApp.services.ascendingSort;
+    myApp.controllers.displaySort();
+  },
+  displaySort: function() {
+
+    document.querySelector("#pending-list").innerHTML = "";
+    document.querySelector("#in-progress-list").innerHTML = "";
+    document.querySelector("#completed-list").innerHTML = "";
+
+    let tabTask = [];
+
+    for(let key in window.localStorage){
+      if(!key.startsWith('item:')) continue;
+
+      tabTask.push(JSON.parse(window.localStorage.getItem(key)));
+    }
+
+    if(myApp.services.ascendingSort){
+      tabTask.sort(function(a, b){
+        if(a.title < b.title) { return -1; }
+        if(a.title > b.title) { return 1; }
+        return 0;
+      })
+    }else{
+      tabTask.sort(function(a, b){
+        if(a.title < b.title) { return 1; }
+        if(a.title > b.title) { return -1; }
+        return 0;
+      })
+    }
+
+
+    tabTask.forEach(element => {
+      myApp.services.tasks.create(element);
+    });
   }
+
 };

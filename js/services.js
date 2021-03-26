@@ -4,6 +4,7 @@
 
 myApp.services = {
 
+  ascendingSort:true,
   /////////////////
   // Task Service //
   /////////////////
@@ -37,6 +38,7 @@ myApp.services = {
           //animation
           myApp.services.animators.swipe(taskItem, function() {
             document.querySelector(myApp.services.tasks.getState(taskItem.data)).appendChild(taskItem);
+            myApp.controllers.displaySort();
           }, false);
 
           //saving
@@ -51,6 +53,7 @@ myApp.services = {
           //animation
           myApp.services.animators.swipe(taskItem, function() {
             document.querySelector(myApp.services.tasks.getState(taskItem.data)).appendChild(taskItem);
+            myApp.controllers.displaySort();
           }, true);
 
           //saving
